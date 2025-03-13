@@ -58,13 +58,14 @@ To set up the project locally, follow these steps:
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    
 3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
+    ```bash
+    pip install -r requirements.txt
 
   If you don't have a requirements.txt file [we haven't it yet], install the required packages manually:
 
-   ```bash
-   pip install pandas numpy matplotlib seaborn plotly missingno nltk selenium requests currency-converter
+    ```bash
+    pip install pandas numpy matplotlib seaborn plotly missingno nltk selenium requests currency-converter
+
 
 ## How to Use
 1. **Scrape Data**: Run `parsing.ipynb` to collect data from Kinopoisk and generate `movies_final.json`.
