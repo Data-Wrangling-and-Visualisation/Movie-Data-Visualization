@@ -49,8 +49,8 @@ To set up the project locally, follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/Data-Wrangling-and-Visualisation/Movie-Data-Visualization.git
+   cd Movie-Data-Visualization
 
 2. **Set up a virtual environment** (optional but recommended):
    ```bash
