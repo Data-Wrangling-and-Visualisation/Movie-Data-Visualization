@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response
 from flask_restful import Resource, Api
 from flask_cors import CORS
 import json
@@ -6,7 +6,18 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
+app.config['JSON_AS_ASCII'] = False 
 CORS(app)
+
+@api.representation('application/json')
+def output_json(data, code, headers=None):
+    resp = make_response(
+        json.dumps(data, ensure_ascii=False, indent=2), 
+        code
+    )
+    resp.headers.extend(headers or {})
+    resp.headers['Content-Type'] = 'application/json; charset=utf-8'
+    return resp
 
 JSON_PATH = os.path.join(os.path.dirname(__file__), 'data/optimized_data.json')
 
