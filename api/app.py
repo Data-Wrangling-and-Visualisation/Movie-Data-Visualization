@@ -1,11 +1,16 @@
 from flask import Flask, jsonify
 from flask_restful import Resource, Api
+from flask_cors import CORS
 import json
+import os
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
-with open('cleaned_data.json', 'r', encoding='utf-8') as f:
+JSON_PATH = os.path.join(os.path.dirname(__file__), 'data/optimized_data.json')
+
+with open(JSON_PATH, 'r', encoding='utf-8') as f:
     movies_data = json.load(f)
 
 class Movies(Resource):
@@ -43,19 +48,17 @@ class Stats(Resource):
             "average_rating": sum(float(m['details']['Рейтинг']) for m in movies_data) / len(movies_data)
         }
         
-        # Статистика по странам
         for movie in movies_data:
             country = movie['details']['Страна']
             stats['countries'][country] = stats['countries'].get(country, 0) + 1
         
-        # Статистика по жанрам
         for movie in movies_data:
             for genre in movie['details']['Жанр'].split(', '):
                 stats['genres'][genre] = stats['genres'].get(genre, 0) + 1
         
         return jsonify(stats)
 
-# Регистрация ресурсов
+
 api.add_resource(Movies, '/api/movies')
 api.add_resource(Movie, '/api/movies/<int:movie_id>')
 api.add_resource(MoviesByCountry, '/api/movies/country/<string:country>')

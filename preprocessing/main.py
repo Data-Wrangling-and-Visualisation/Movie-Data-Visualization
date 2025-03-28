@@ -356,7 +356,7 @@ def clean_dataframe(df):
     return df
 
 
-def save_cleaned_data_to_json(df, output_file="../api/cleaned_data1.json"):
+def save_cleaned_data_to_json(df, output_file="../data/cleaned_data.json"):
     """Saves the cleaned DataFrame back to a JSON file, preserving structure and handling NaN values."""
     if df is not None:
         try:
@@ -376,7 +376,7 @@ def save_cleaned_data_to_json(df, output_file="../api/cleaned_data1.json"):
 
 # Main Execution
 if __name__ == "__main__":
-    input_file = "../movies_final.json"
+    input_file = "../data/movies_final.json"
     cleaned_df = load_and_process_data(input_file)
 
     if cleaned_df is not None:
