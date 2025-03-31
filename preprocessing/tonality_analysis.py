@@ -49,15 +49,12 @@ weights = {
 
 def get_emotion_weight(label, score):
     if label == 'POSITIVE':
-        # Усиленная сигмоида с быстрым ростом после 0.6
         return 0.5 + 0.5 * (1 / (1 + np.exp(-12*(score - 0.65))))
     elif label == 'NEGATIVE':
-        # Аналогично для негатива
         return -0.5 - 0.5 * (1 / (1 + np.exp(-12*(score - 0.65))))
     else:
-        # Более выраженный переход для нейтральных
         if score > 0.5:
-            return 0.3 * (2*(score - 0.5)) ** 0.7  # Быстрый выход на плато
+            return 0.3 * (2*(score - 0.5)) ** 0.7
         else:
             return -0.3 * (2*(0.5 - score)) ** 0.7
 def enhanced_analyze_sentiment(texts):
