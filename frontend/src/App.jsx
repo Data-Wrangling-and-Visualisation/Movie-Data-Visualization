@@ -22,15 +22,31 @@ function App() {
   return (
     <div className={`app ${scrolled ? 'scrolled' : ''}`}>
       {/* Обложка */}
-      <section className="cover">
+      <section id="main" className="cover">
         <div className={`cover-top ${scrolled ? 'scrolled' : ''}`}>
-          <span className="cover-label">Visualization project</span>
-          <span className="cover-authors">Name, Name, Name</span>
+          <span className="cover-label">
+            <span className="text-blue">Visualization</span> <span>project</span>
+          </span>
+          <nav className="header-nav">
+            <a href="#main" className="nav-link">Main page</a>
+            <a href="#years" className="nav-link">Over the years</a>
+            <a href="#geography" className="nav-link">Geography</a>
+            <a href="#genres" className="nav-link">Genres</a>
+            <a href="#sentiment" className="nav-link">Sentiment</a>
+          </nav>
+          <a 
+            href="https://t.me/mescudiway" 
+            className="contact-button"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Contact us
+          </a>
         </div>
 
         <div className="cover-content">
           <h1 className="cover-title">
-            <span className="title-line">Movie Data Analysis</span>
+            <span className="text-blue">Movie</span> <span >Data</span> <span>Analysis</span>
           </h1>
 
           <div className="stats-block">
@@ -68,12 +84,12 @@ function App() {
       </section>
 
       {/* Серая переходная секция */}
-      <section className="transition-section">
+      <section id="years" className="transition-section">
         <h2 className="transition-title">Movies over the years</h2>
       </section>
 
       {/* Основной контент */}
-      <header className="header">
+      <header className="geo-header">
         <div className="logo">KP250</div>
         <nav className="nav">
           <button 
@@ -97,7 +113,7 @@ function App() {
         </nav>
       </header>
 
-      <main className="main-content">
+      <main className="geography">
         {activeTab === 'map' && (
           <section className="section">
             <h2 className="section-title">
