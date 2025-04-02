@@ -69,7 +69,46 @@ class Stats(Resource):
         
         return jsonify(stats)
 
+class StatsByYear(Resource):
+    def get(self, end_year):
+        """Returns movie statistics for films up to the given year"""
+        try:
+            filtered_movies = [
+                m for m in movies_data 
+                if int(m['details']['Год производства']) <= end_year
+            ]
+            
+            if not filtered_movies:
+                return {"error": f"No movies found before {end_year}"}, 404
+                
+            stats = {
+                "total_movies": len(filtered_movies),
+                "countries": {},
+                "genres": {},
+                "average_rating": sum(float(m['details']['Рейтинг']) for m in filtered_movies) / len(filtered_movies)
+            }
+            
+            # Обработка стран (учитываем что страна может быть "Россия, США")
+            for movie in filtered_movies:
+                countries = [c.strip() for c in movie['details']['Страна'].split(",")]
+                for country in countries:
+                    if country:  # Игнорируем пустые значения
+                        stats['countries'][country] = stats['countries'].get(country, 0) + 1
+            
+            # Обработка жанров
+            for movie in filtered_movies:
+                genres = [g.strip() for g in movie['details']['Жанр'].split(",")]
+                for genre in genres:
+                    if genre:  # Игнорируем пустые значения
+                        stats['genres'][genre] = stats['genres'].get(genre, 0) + 1
+            
+            return jsonify(stats)
+            
+        except Exception as e:
+            return {"error": f"Server error: {str(e)}"}, 500
 
+
+api.add_resource(StatsByYear, '/api/stats/<int:end_year>')
 api.add_resource(Movies, '/api/movies')
 api.add_resource(Movie, '/api/movies/<int:movie_id>')
 api.add_resource(MoviesByCountry, '/api/movies/country/<string:country>')

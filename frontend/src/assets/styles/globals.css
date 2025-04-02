@@ -1,0 +1,70 @@
+/* Основные стили */
+:root {
+    --bg-dark: #0a0c17;
+    --neon-blue: #4fc3f7;
+    --neon-pink: #ff4081;
+    --text-primary: rgba(255, 255, 255, 0.95);
+  }
+  
+  body {
+    margin: 0;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+  }
+  
+  /* Контейнер контента */
+  .content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Секции */
+  .hero-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .title-glow {
+    font-size: 4rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px var(--neon-blue), 
+                 0 0 20px rgba(79, 195, 247, 0.5);
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+    opacity: 0.8;
+  }
+  
+  /* Карточки визуализаций */
+  .viz-card {
+    width: 100%;
+    min-height: 80vh;
+    margin: 5rem 0;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Анимация загрузки */
+  .loader {
+    font-size: 3rem;
+    text-align: center;
+    margin: 10rem 0;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
