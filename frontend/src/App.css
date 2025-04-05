@@ -273,13 +273,13 @@ body {
 .film-cassette {
   position: absolute;
   right: 0;
-  top: 10%;
-  transform: translateX(5%) rotate(-80deg);
+  top: 15%;
+  transform: translateX(15%) rotate(20deg);
   opacity: 0;
   animation: cassetteDrop 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.7s forwards;
   z-index: 10;
   filter: drop-shadow(-10px 15px 10px rgba(0, 0, 0, 0.3));
-  width: 350px;
+  width: 550px;
   perspective: 1000px;
 }
 
@@ -295,13 +295,13 @@ body {
     opacity: 0;
   }
   100% {
-    transform: translateX(5%) rotate(-80deg); /* Фиксированное положение с частью кассеты за краем */
+    transform: translateX(15%) rotate(20deg); /* Фиксированное положение с частью кассеты за краем */
     opacity: 1;
   }
 }
 
 .film-cassette:hover {
-  transform: translateX(5%) rotate(-80deg) !important;
+  transform: translateX(15%) rotate(20deg) !important;
   filter: drop-shadow(-15px 20px 12px rgba(0, 0, 0, 0.25));
 }
 

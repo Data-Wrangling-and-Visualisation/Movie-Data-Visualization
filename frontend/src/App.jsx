@@ -65,7 +65,7 @@ function App() {
           </div>
 
           <div className="film-cassette">
-            <img src="/photos/titlephoto1.png" alt="Film cassette" />
+            <img src="/photos/VHS.png" alt="Film cassette" />
           </div>
         </div>
 
