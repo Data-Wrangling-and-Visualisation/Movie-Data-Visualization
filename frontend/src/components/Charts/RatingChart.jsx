@@ -32,7 +32,6 @@ const RatingChart = ({ data, onExpand }) => {
         .attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(x));
 
-      // Настраиваем подписи
       xAxis.selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")

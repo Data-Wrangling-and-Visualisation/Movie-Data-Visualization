@@ -95,7 +95,6 @@ function App() {
         <h2 className="section-main-title"><span className="text-blue">Movies</span> over the years</h2>
         
         <div className="years-content">
-          {/* Текстовый блок слева */}
           <div className="years-text">
             <p className="years-description">
               Cinema has evolved dramatically since its inception. 
@@ -105,7 +104,6 @@ function App() {
             </p>
           </div>
 
-          {/* Блок с фактами справа */}
           <div className="years-stats">
             <div className="stats-grid">
               <div className="years-stat-item">
@@ -120,7 +118,6 @@ function App() {
                 <div className="years-stat-label">Total worldwide box office</div>
               </div>
               
-              {/* Остальные статы аналогично */}
               <div className="years-stat-item">
                 <AnimatedNumber 
                   value={127} 

@@ -8,7 +8,7 @@ const GenreWordCloud = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/stats');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stats`);
         const data = await response.json();
         drawWordCloud(data.genres);
       } catch (error) {

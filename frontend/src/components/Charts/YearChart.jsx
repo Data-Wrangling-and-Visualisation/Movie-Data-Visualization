@@ -15,7 +15,6 @@ const YearChart = ({ data, onExpand }) => {
       const chart = svg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Фильтрация лет (каждый 5-й год)
       const years = Object.keys(data).sort();
       const filteredYears = years.filter((_, i) => i % 5 === 0 || i === years.length - 1);
 

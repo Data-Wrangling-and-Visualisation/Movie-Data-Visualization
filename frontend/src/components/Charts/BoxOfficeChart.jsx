@@ -15,8 +15,8 @@ const BoxOfficeChart = ({ data }) => {
       const chart = svg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Преобразуем данные в логарифмические бины
-      const minValue = 1e6; // 1 миллион
+      
+      const minValue = 1e6;
       const maxValue = d3.max(Object.keys(data).flatMap(range => {
         const [min, max] = range.split('-').map(Number);
         return [min, max];
@@ -43,7 +43,7 @@ const BoxOfficeChart = ({ data }) => {
         return [`${min/1e6}-${max/1e6}M`, count];
       });
 
-      // X axis (логарифмические бины)
+      // X axis
       const x = d3.scaleBand()
         .domain(binData.map(d => d[0]))
         .range([0, width])
@@ -56,7 +56,7 @@ const BoxOfficeChart = ({ data }) => {
           .attr("transform", "rotate(-45)")
           .style("text-anchor", "end");
 
-      // Y axis (количество фильмов)
+      // Y axis
       const y = d3.scaleLinear()
         .domain([0, d3.max(binData.map(d => d[1]))])
         .range([height, 0]);

@@ -66,8 +66,8 @@ const SliderMap = () => {
     setError(null);
     
     try {
-      const response = await fetch(`http://localhost:5000/api/stats/${year}`);
-      if (!response.ok) throw new Error('Ошибка загрузки данных');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stats/${year}`);
+      if (!response.ok) throw new Error('Data upload error');
       
       const data = await response.json();
       const processedData = processCountriesData(data.countries || {}, year);
@@ -75,7 +75,7 @@ const SliderMap = () => {
       setDataCache(prev => ({ ...prev, [year]: processedData }));
       updateMap(processedData, year);
     } catch (err) {
-      console.error('Ошибка:', err);
+      console.error('Error:', err);
       setError(err.message);
       updateMap({}, year);
     } finally {
@@ -114,15 +114,13 @@ const SliderMap = () => {
         }
         
         if (russianName && countriesData[russianName]) {
-          // Поднимаем элемент на верхний уровень
+
           this.parentNode.appendChild(this);
           
-          // Получаем bounding box страны
           const [[x0, y0], [x1, y1]] = d3.geoPath().bounds(d);
           const centerX = (x0 + x1) / 2;
           const centerY = (y0 + y1) / 2;
           
-          // Эффекты выделения
           d3.select(this)
             .transition()
             .duration(200)

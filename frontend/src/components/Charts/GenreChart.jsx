@@ -15,7 +15,6 @@ const GenreChart = ({ data, onExpand }) => {
       const chart = svg.append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Сортируем по убыванию и берем топ-10
       const sortedData = Object.entries(data)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10);

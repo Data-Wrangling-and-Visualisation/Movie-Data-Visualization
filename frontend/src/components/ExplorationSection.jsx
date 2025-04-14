@@ -25,10 +25,10 @@ const ExplorationSection = () => {
   const loadData = async () => {
     try {
       const responses = await Promise.all([
-        fetch('/api/charts/years'),
-        fetch('/api/charts/boxoffice'),
-        fetch('/api/charts/ratings'),
-        fetch('/api/charts/genres')
+        fetch(`${import.meta.env.VITE_API_URL}/api/charts/years`),
+        fetch(`${import.meta.env.VITE_API_URL}/api/charts/boxoffice`),
+        fetch(`${import.meta.env.VITE_API_URL}/api/charts/ratings`),
+        fetch(`${import.meta.env.VITE_API_URL}/api/charts/genres`)
       ]);
       
       const [years, boxOffice, ratings, genres] = await Promise.all(

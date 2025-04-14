@@ -10,7 +10,7 @@ const WorldMap = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:5000/api/stats');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stats`);
       const data = await response.json();
       drawMap(data.countries);
     };
@@ -34,21 +34,18 @@ const WorldMap = () => {
 
     const path = d3.geoPath().projection(projection);
 
-    // Находим максимальное количество фильмов для шкалы цветов
     const maxFilms = d3.max(Object.values(countriesData));
     const colorScale = d3.scaleSequential(d3.interpolateBlues)
       .domain([0, maxFilms]);
 
     const worldData = topojson.feature(world, world.objects.countries);
 
-    // Рисуем карту
     svg.selectAll('path')
       .data(worldData.features)
       .enter()
       .append('path')
       .attr('d', path)
       .attr('fill', d => {
-        // Находим русское название страны по английскому
         const russianName = Object.keys(countryMappings).find(
           key => countryMappings[key] === d.properties.name
         );
@@ -84,7 +81,6 @@ const WorldMap = () => {
         tooltip.style('opacity', 0);
       });
 
-    // Добавляем легенду
     const legend = svg.append('g')
       .attr('transform', `translate(${width - 150}, ${height - 200})`);
 

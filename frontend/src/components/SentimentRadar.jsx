@@ -6,7 +6,7 @@ const SentimentRadar = ({ movieId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`http://localhost:5000/api/movies/${movieId}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/movies/${movieId}`);
       const data = await response.json();
       drawRadar(data.details.Анализ_рецензий.distribution_ratios);
     };
