@@ -7,8 +7,6 @@ This project presents an interactive data visualization of the **Top 250 movies*
 
 Moreover, visualizations reveal significant patterns in the film industry that are related to the success of a movie. Therefore, the information in the project can be a **valuable tool** for film analysts to understand certain trends in movie statistics.
 
-**Live Project**: Available at [Vercel link – to be added].
-
 ## Repository Structure
 
 ```
@@ -67,13 +65,23 @@ As part of the second project checkpoint, we completed the following major tasks
    The main visual components have been built in React (`/frontend/src/components`). Charts, maps, and data panels are actively being integrated into the UI.
 
 3. **Cloud Deployment**  
-   The project has been deployed to a cloud platform using **Vercel**, ensuring easy access and performance scalability.
+   The project has been deployed to a cloud platform using **Netify**, ensuring easy access and performance scalability.
 
 4. **Ready-to-Use React Components**  
    All interactive components (sliders, modals, radar charts, maps) are prepared and only require final integration on the main page. Now we are working on it, and some visualizations can look inappropriate, but by the time the presentation, we will bring them to a good look, as well as add additional visualizations.
 
 5. **Modern and Engaging UI Design**  
    The interface features a clean, responsive layout with animated and dynamic visual elements for a rich user experience.
+
+
+## Production
+
+The project was successfully deployed:
+
+- 🎬 **Frontend**: [Netlify](https://movie-data-visual.netlify.app/)
+- 🔧 **Backend**
+
+**Live Project**: Available at https://movie-data-visual.netlify.app/   
 
 ---
 
