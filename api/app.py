@@ -3,6 +3,7 @@ from flask_restful import Resource, Api
 from flask_cors import CORS
 import json
 import os
+from collections import Counter
 
 app = Flask(__name__)
 api = Api(app)
@@ -71,7 +72,7 @@ class Stats(Resource):
 
 class StatsByYear(Resource):
     def get(self, end_year):
-        """Returns movie statistics for films up to the given year"""
+        """Returns movie statistics for films by the given year"""
         try:
             filtered_movies = [
                 m for m in movies_data 
@@ -88,24 +89,105 @@ class StatsByYear(Resource):
                 "average_rating": sum(float(m['details']['Рейтинг']) for m in filtered_movies) / len(filtered_movies)
             }
             
-            # Обработка стран (учитываем что страна может быть "Россия, США")
             for movie in filtered_movies:
                 countries = [c.strip() for c in movie['details']['Страна'].split(",")]
                 for country in countries:
-                    if country:  # Игнорируем пустые значения
+                    if country:
                         stats['countries'][country] = stats['countries'].get(country, 0) + 1
             
-            # Обработка жанров
+
             for movie in filtered_movies:
                 genres = [g.strip() for g in movie['details']['Жанр'].split(",")]
                 for genre in genres:
-                    if genre:  # Игнорируем пустые значения
+                    if genre:
                         stats['genres'][genre] = stats['genres'].get(genre, 0) + 1
             
             return jsonify(stats)
             
         except Exception as e:
             return {"error": f"Server error: {str(e)}"}, 500
+
+@app.route('/api/charts/years')
+def years_data():
+    years = [movie['details']['Год производства'] for movie in movies_data]
+    year_counts = Counter(years)
+    return jsonify(dict(sorted(year_counts.items())))
+
+@app.route('/api/charts/boxoffice')
+def boxoffice_data():
+    box_offices = []
+    for movie in movies_data:
+        try:
+            worldwide = float(movie['details']['Сборы в мире $'])
+            box_offices.append(worldwide)
+        except (KeyError, ValueError):
+            continue
+    
+    if box_offices:
+        min_val = min(box_offices)
+        max_val = max(box_offices)
+        step = (max_val - min_val) / 10
+        bins = [min_val + i*step for i in range(11)]
+        
+        distribution = {f"{bins[i]:.0f}-{bins[i+1]:.0f}": 0 for i in range(10)}
+        for amount in box_offices:
+            for i in range(10):
+                if bins[i] <= amount < bins[i+1]:
+                    distribution[f"{bins[i]:.0f}-{bins[i+1]:.0f}"] += 1
+                    break
+        return jsonify(distribution)
+    return jsonify({})
+
+@app.route('/api/charts/ratings')
+def ratings_data():
+    ratings = []
+    for movie in movies_data:
+        try:
+            rating = float(movie['details']['Рейтинг'])
+            ratings.append(rating)
+        except (KeyError, ValueError):
+            continue
+    
+    if ratings:
+        rating_dist = {}
+        for r in range(0, 101, 5):
+            lower = r / 10
+            upper = (r + 5) / 10
+            key = f"{lower:.1f}-{upper:.1f}"
+            rating_dist[key] = sum(lower <= rating < upper for rating in ratings)
+        return jsonify(rating_dist)
+    return jsonify({})
+
+@app.route('/api/charts/genres')
+def genres_data():
+    genres = []
+    for movie in movies_data:
+        try:
+            movie_genres = [g.strip() for g in movie['details']['Жанр'].split(',')]
+            genres.extend(movie_genres)
+        except (KeyError, AttributeError):
+            continue
+    
+    genre_counts = Counter(genres)
+    return jsonify(dict(genre_counts.most_common(15)))
+
+@app.route('/api/charts/durations')
+def durations_data():
+    durations = []
+    for movie in movies_data:
+        try:
+            duration = int(movie['details']['Время в минутах'])
+            durations.append(duration)
+        except (KeyError, ValueError):
+            continue
+    
+    if durations:
+        duration_dist = {}
+        for d in range(0, 301, 20):
+            key = f"{d}-{d+20} min"
+            duration_dist[key] = sum(d <= duration < d+20 for duration in durations)
+        return jsonify(duration_dist)
+    return jsonify({})          
 
 
 api.add_resource(StatsByYear, '/api/stats/<int:end_year>')
@@ -116,4 +198,4 @@ api.add_resource(MoviesByGenre, '/api/movies/genre/<string:genre>')
 api.add_resource(Stats, '/api/stats')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

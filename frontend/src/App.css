@@ -3,7 +3,7 @@
   --black: #000000;
   --white: #ffffff;
   --blue: #0066cc;
-  --grey: #f5f5f5;
+  --grey: #fafafa;
 }
 
 * {
@@ -310,18 +310,280 @@ body {
 }
 
 
-.transition-section {
+/* Стили секции */
+.years-section {
   width: 100vw;
-  min-height: 100vh;
+  min-height: 200vh;
   background-color: var(--grey);
-  padding: 8% 8% 0 7%;
+  padding: 7% 2% 0% 7%;
+  position: relative;
 }
 
-.transition-title {
+.section-main-title {
   font-weight: 300;
-  font-size: 4vw;
-  margin: 0;
-  letter-spacing: -0.03em;
+  font-size: 3rem;
+  margin-bottom: 80px;
+  color: var(--black);
+}
+
+.years-content {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 50vh;
+}
+
+.years-text {
+  flex: 1;
+  min-width: 50%;
+  max-width: 50%;
+  padding-right: 40px;
+}
+
+.years-description {
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+.years-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px;
+}
+
+.years-stat-item {
+  text-align: left;
+}
+
+.stat-number {
+  font-weight: 300;
+  font-size: 3rem;
+  color: var(--blue);
+  line-height: 1;
+  font-family: 'Helvetica Neue Light', sans-serif;
+  margin-bottom: 8px;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.stat-number {
+  transition: transform 0.3s ease-out;
+}
+
+.stat-number:hover {
+  transform: scale(1.05);
+}
+
+.years-stat-label {
+  font-weight: 300;
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .years-stats {
+    align-items: center;
+    margin-right: 0;
+  }
+  
+  .stats-title {
+    text-align: center;
+    padding-right: 0;
+  }
+  
+  .stats-header {
+    justify-content: center;
+  }
+}
+
+/* Адаптация */
+@media (max-width: 1024px) {
+  .years-content {
+    flex-direction: column;
+    gap: 60px;
+  }
+  
+  .years-text {
+    padding-right: 0;
+  }
+  
+  .years-stats {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-main-title {
+    font-size: 2.2rem;
+    margin-bottom: 50px;
+  }
+  
+  .years-description {
+    font-size: 1.1rem;
+  }
+  
+  .stat-number {
+    font-size: 2.5rem;
+    min-width: 100px;
+  }
+}
+
+/* Общие стили для всех графиков */
+.chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.chart-container:hover {
+  transform: translateY(-5px);
+}
+
+.chart-title {
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Оси графиков */
+.chart-svg .domain,
+.chart-svg .tick line {
+  stroke: #e0e0e0;
+}
+
+.chart-svg .tick text {
+  fill: #666;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  font-size: 0.7rem;
+}
+
+/* Стили для столбцов (YearChart) */
+.chart-bar {
+  fill: #0066cc;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.chart-bar:hover {
+  opacity: 1;
+}
+
+/* Стили для линии (BoxOfficeChart) */
+.chart-line {
+  stroke: #0066cc;
+  stroke-width: 3;
+}
+
+/* Стили для области (RatingChart) */
+.chart-area {
+  fill: #0066cc;
+  opacity: 0.5;
+  stroke: #0066cc;
+  stroke-width: 2;
+}
+
+/* Стили для круговой диаграммы (GenreChart) */
+.chart-arc {
+  transition: transform 0.2s ease;
+}
+
+.chart-arc:hover {
+  transform: scale(1.05);
+}
+
+.chart-legend-text {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  fill: #333;
+}
+
+/* Сетка графиков */
+.visualizations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .visualizations-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    padding: 15px;
+  }
+}
+
+/* Styles for text */
+.exploration-text {
+  font-weight: 300;
+  font-size: 2rem;
+  color: var(--black);
+  line-height: 1.6;
+  margin-bottom: 40px;
+  padding: 100px 0px;
+  transition: all 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+  will-change: transform, opacity;
+}
+
+.exploration-text.charts-visible {
+  transform: translateX(-0px) scale(0.7);
+  opacity: 0.8;
+  color: #666;
+}
+
+.visualizations-grid {
+  opacity: 0;
+  transform: translateY(0);
+  transition: all 1.0s ease-out;
+}
+
+.visualizations-grid.visible {
+  opacity: 1;
+  transform: translateY(-90px);
+}
+
+/* Задержки для анимации графиков */
+.visualizations-grid.visible .chart-container:nth-child(1) {
+  transition-delay: 3.5s;
+}
+.visualizations-grid.visible .chart-container:nth-child(2) {
+  transition-delay: 3.5s;
+}
+.visualizations-grid.visible .chart-container:nth-child(3) {
+  transition-delay: 3.5s;
+}
+.visualizations-grid.visible .chart-container:nth-child(4) {
+  transition-delay: 3.5s;
 }
 
 

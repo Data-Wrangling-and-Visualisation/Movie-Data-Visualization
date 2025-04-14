@@ -29,11 +29,11 @@ const SentimentRadar = ({ movieId }) => {
       .attr('transform', `translate(${margin.left + innerWidth / 2}, ${margin.top + innerHeight / 2})`);
 
     const data = [
-      { axis: "Сильно +", value: sentimentData.strong_positive * 100 },
-      { axis: "Слабо +", value: sentimentData.weak_positive * 100 },
-      { axis: "Нейтрально", value: sentimentData.neutral * 100 },
-      { axis: "Слабо -", value: sentimentData.weak_negative * 100 },
-      { axis: "Сильно -", value: sentimentData.strong_negative * 100 }
+      { axis: "Strong positive", value: sentimentData.strong_positive * 100 },
+      { axis: "Strong negative", value: sentimentData.weak_positive * 100 },
+      { axis: "Neutral", value: sentimentData.neutral * 100 },
+      { axis: "Weak negative", value: sentimentData.weak_negative * 100 },
+      { axis: "Weak positive", value: sentimentData.strong_negative * 100 }
     ];
 
     const maxValue = 50;
@@ -44,7 +44,6 @@ const SentimentRadar = ({ movieId }) => {
       .range([0, innerWidth / 2 - 20])
       .domain([0, maxValue]);
 
-    // Рисуем круги
     for (let i = 1; i <= levels; i++) {
       const levelFactor = maxValue * i / levels;
       g.selectAll(".levels")
@@ -58,7 +57,6 @@ const SentimentRadar = ({ movieId }) => {
         .style("stroke-width", "0.5px");
     }
 
-    // Оси
     const axis = g.selectAll(".axis")
       .data(data)
       .enter()
@@ -82,7 +80,6 @@ const SentimentRadar = ({ movieId }) => {
       .attr("x", (d, i) => rScale(maxValue * 1.1) * Math.cos(angleSlice * i - Math.PI / 2))
       .attr("y", (d, i) => rScale(maxValue * 1.1) * Math.sin(angleSlice * i - Math.PI / 2));
 
-    // Данные
     const radarLine = d3.lineRadial()
       .curve(d3.curveLinearClosed)
       .radius(d => rScale(d.value))

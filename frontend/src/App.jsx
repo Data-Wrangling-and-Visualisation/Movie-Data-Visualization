@@ -3,15 +3,24 @@ import './App.css';
 import SliderMap from './components/SliderMap';
 import SentimentRadar from './components/SentimentRadar';
 import GenreWordCloud from './components/GenreWordCloud';
+import CountUp from 'react-countup';
 import FilmSlider from './components/FilmSlider';
+import { useOnScreen } from './hooks/useOnScreen';
+import AnimatedNumber from './components/AnimatedNumber';
+import ExplorationSection from './components/ExplorationSection'
+
 function App() {
   const [selectedMovieId, setSelectedMovieId] = useState(1);
   const [activeTab, setActiveTab] = useState('map');
   const [scrolled, setScrolled] = useState(false);
+  const [yearsRef, isYearsVisible] = useOnScreen({
+    threshold: 0.1,
+    triggerOnce: true
+  });
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 50; // Появляется после 50px скролла
+      const isScrolled = window.scrollY > 50;
       setScrolled(isScrolled);
     };
 
@@ -21,7 +30,6 @@ function App() {
 
   return (
     <div className={`app ${scrolled ? 'scrolled' : ''}`}>
-      {/* Обложка */}
       <section id="main" className="cover">
         <div className={`cover-top ${scrolled ? 'scrolled' : ''}`}>
           <span className="cover-label">
@@ -83,81 +91,146 @@ function App() {
         </a>
       </section>
 
-      {/* Серая переходная секция */}
-      <section id="years" className="transition-section">
-        <h2 className="transition-title">Movies over the years</h2>
+      <section id="years" className="years-section" ref={yearsRef}>
+        <h2 className="section-main-title"><span className="text-blue">Movies</span> over the years</h2>
+        
+        <div className="years-content">
+          {/* Текстовый блок слева */}
+          <div className="years-text">
+            <p className="years-description">
+              Cinema has evolved dramatically since its inception. 
+              The top 250 films represent the pinnacle of storytelling, 
+              showcasing how budgets, technologies and audience tastes 
+              have transformed over the decades.
+            </p>
+          </div>
+
+          {/* Блок с фактами справа */}
+          <div className="years-stats">
+            <div className="stats-grid">
+              <div className="years-stat-item">
+                <AnimatedNumber 
+                  value={58.7} 
+                  duration={1.5} 
+                  decimals={1} 
+                  suffix="B" 
+                  startOnView 
+                  isVisible={isYearsVisible}
+                />
+                <div className="years-stat-label">Total worldwide box office</div>
+              </div>
+              
+              {/* Остальные статы аналогично */}
+              <div className="years-stat-item">
+                <AnimatedNumber 
+                  value={127} 
+                  duration={1.5} 
+                  suffix="m" 
+                  startOnView 
+                  isVisible={isYearsVisible}
+                />
+                <div className="years-stat-label">Average budget</div>
+              </div>
+              
+              <div className="years-stat-item">
+                <AnimatedNumber 
+                  value={112} 
+                  duration={1.5} 
+                  suffix="min" 
+                  startOnView 
+                  isVisible={isYearsVisible}
+                />
+                <div className="years-stat-label">Average runtime</div>
+              </div>
+              
+              <div className="years-stat-item">
+                <AnimatedNumber 
+                  value={8.2} 
+                  duration={1.5} 
+                  decimals={1} 
+                  startOnView 
+                  isVisible={isYearsVisible}
+                />
+                <div className="years-stat-label">Average rating</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section id="visualizations" className="visualizations-section">
+          <ExplorationSection />
+        </section>
       </section>
 
-      {/* Основной контент */}
-      <header className="geo-header">
-        <div className="logo">KP250</div>
-        <nav className="nav">
-          <button 
-            className={`nav-btn ${activeTab === 'map' ? 'active' : ''}`}
-            onClick={() => setActiveTab('map')}
-          >
-            Карта
-          </button>
-          <button 
-            className={`nav-btn ${activeTab === 'genres' ? 'active' : ''}`}
-            onClick={() => setActiveTab('genres')}
-          >
-            Жанры
-          </button>
-          <button 
-            className={`nav-btn ${activeTab === 'sentiment' ? 'active' : ''}`}
-            onClick={() => setActiveTab('sentiment')}
-          >
-            Тональность
-          </button>
-        </nav>
-      </header>
+      <section id="geography" className="geo-section">
+        <header className="geo-header">
+          <nav className="nav">
+            <button 
+              className={`nav-btn ${activeTab === 'map' ? 'active' : ''}`}
+              onClick={() => setActiveTab('map')}
+            >
+              Map
+            </button>
+            <button 
+              className={`nav-btn ${activeTab === 'genres' ? 'active' : ''}`}
+              onClick={() => setActiveTab('genres')}
+            >
+              Genres
+            </button>
+            <button 
+              className={`nav-btn ${activeTab === 'sentiment' ? 'active' : ''}`}
+              onClick={() => setActiveTab('sentiment')}
+            >
+              Tonality
+            </button>
+          </nav>
+        </header>
 
-      <main className="geography">
-        {activeTab === 'map' && (
-          <section className="section">
-            <h2 className="section-title">
-              <span className="text-blue">География</span> кинематографа
-            </h2>
-            <SliderMap />
-          </section>
-        )}
+        <main className="geography">
+          {activeTab === 'map' && (
+            <section className="section">
+              <h2 className="section-title">
+                <span className="text-blue">Cinematography</span> history
+              </h2>
+              <SliderMap />
+            </section>
+          )}
 
-        {activeTab === 'genres' && (
-          <section className="section">
-            <h2 className="section-title">
-              <span className="text-blue">Жанровая</span> палитра
-            </h2>
-            <GenreWordCloud />
-          </section>
-        )}
+          {activeTab === 'genres' && (
+            <section className="section">
+              <h2 className="section-title">
+                <span className="text-blue">Genre</span> palette
+              </h2>
+              <GenreWordCloud />
+            </section>
+          )}
 
-        {activeTab === 'sentiment' && (
-          <section className="section">
-            <h2 className="section-title">
-              <span className="text-blue">Эмоциональный</span> ландшафт
-            </h2>
-            <div className="movie-selector">
-              <label className="selector-label">
-                Выберите фильм:
-                <input
-                  type="range"
-                  min="1"
-                  max="250"
-                  value={selectedMovieId}
-                  onChange={(e) => setSelectedMovieId(parseInt(e.target.value))}
-                  className="range-input"
-                />
-                <span className="movie-id">#{selectedMovieId}</span>
-              </label>
-            </div>
-            <SentimentRadar movieId={selectedMovieId} />
-          </section>
-        )}
-      </main>
+          {activeTab === 'sentiment' && (
+            <section className="section">
+              <h2 className="section-title">
+                <span className="text-blue">Emotional</span> spectrum
+              </h2>
+              <div className="movie-selector">
+                <label className="selector-label">
+                  Выберите фильм:
+                  <input
+                    type="range"
+                    min="1"
+                    max="250"
+                    value={selectedMovieId}
+                    onChange={(e) => setSelectedMovieId(parseInt(e.target.value))}
+                    className="range-input"
+                  />
+                  <span className="movie-id">#{selectedMovieId}</span>
+                </label>
+              </div>
+              <SentimentRadar movieId={selectedMovieId} />
+            </section>
+          )}
+        </main>
+      </section>
 
       <footer className="footer">
-        <p>© 2023 Kinopoisk 250 Analytics</p>
+        <p>© 2025 Kinopoisk top-250 films Analysis</p>
       </footer>
     </div>
   );
