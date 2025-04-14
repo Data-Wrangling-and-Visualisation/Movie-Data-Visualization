@@ -1,77 +1,142 @@
+
 # Kinopoisk Top 250 Movies Analysis
 
 ## Project Overview
-This project is aimed at creating an interactive visualization of global data on the 250 best films collected from the Kinopoisk platform. The goal is to provide a clear and accessible representation of films by country, genre, and other key features, as well as to identify trends in the global film industry over time. The visualization will demonstrate how different countries contribute to the film industry, identify popular genres and topics by region, and analyze audience preferences on the Kinopoisk platform.
+
+This project presents an interactive data visualization of the **Top 250 movies** according to the Kinopoisk platform. The goal is to provide a clear, intuitive representation of film data by country, genre, budget, ratings, and more. Users can explore **global trends** in cinema, popular genres by region, and **audience preferences** through engaging visual tools.
+Moreover, visualizations reveal significant patterns in the film industry that are related to the success of a movie. Therefore, the information in the project can be a **valuable tool** for film analysts to understand certain trends in movie statistics.
+
+**Live Project**: Available at [Vercel link – to be added].
 
 ## Repository Structure
-The repository contains the following files:
 
-### 1. `movies_final.json`
-- **Description**: Contains raw data collected from Kinopoisk using web scraping with Selenium.
-- **Source**: Data is scraped from the Kinopoisk platform.
-- **Usage**: This file serves as the initial dataset for further processing.
+```
+.
+├── api/                    # Backend with Flask API and Docker configuration
+│   ├── app.py
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── data/
+│       └── optimized_data.json
+│
+├── data/                   # All datasets
+│   ├── cleaned_data.json
+│   ├── movies_final.json
+│   └── optimized_data.json
+│
+├── frontend/               # Frontend built with React + Vite
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/     # Main React components
+│   │   │   ├── Charts/
+│   │   │   ├── AnimatedNumber.jsx
+│   │   │   ├── ExpandedChartModal.jsx
+│   │   │   ├── ExplorationSection.jsx
+│   │   │   ├── FilmSlider.jsx
+│   │   │   ├── GenreWordCloud.jsx
+│   │   │   ├── SentimentRadar.jsx
+│   │   │   └── WorldMap.jsx
+│   │   ├── hooks/          # Important frontend hooks
+│   │   ├── utils/
+│   │   │   └── countryMappings.js
+│   │   ├── App.jsx
+│   │   ├── App.css
+│   │   ├── index.css
+│   │   └── main.jsx
+│   └── vite.config.js
+│
+├── notebooks/              # Jupyter notebooks for analysis
+├── preprocessing/          # Data preparation scripts
+├── parsing.ipynb           # Web scraping notebook using Selenium
+├── requirements.txt
+├── README.md
+├── LICENSE
+└── .gitignore
+```
 
-### 2. `parsing.ipynb`
-- **Description**: A Jupyter Notebook containing the code for web scraping Kinopoisk using Selenium.
-- **Purpose**: Extracts data about the top 250 movies, including details like title, year, genre, budget, revenue, and ratings.
-- **Output**: Generates `movies_final.json`.
+## Second Checkpoint Summary
 
-### 3. `main.py`
-- **Description**: A Python script that cleans the raw data from `movies_final.json`.
-- **Tasks**:
-  - Removes unnecessary characters and symbols.
-  - Converts numeric values to appropriate data types.
-  - Converts currencies for budgets and gross values
-- **Output**: Generates `cleaned_data.json`, which is ready for analysis.
+As part of the second project checkpoint, we completed the following major tasks:
 
-### 4. `cleaned_data.json`
-- **Description**: The cleaned and processed version of the raw data.
-- **Usage**: This file is used as the input for exploratory data analysis (EDA).
+1. **Backend Integration**  
+   A fully functional Flask server was created (see `/api`). All API endpoints are set up and deliver processed data to the frontend.
 
-### 5. `exploratory_analysis.ipynb`
-- **Description**: A Jupyter Notebook containing the Exploratory Data Analysis (EDA) of the cleaned dataset.
-- **Tasks**:
-  - Analyzes missing data and handles null values.
-  - Computes correlations between variables (e.g., budget vs. revenue).
-  - Visualizes distributions of key metrics (e.g., budget, ratings, runtime).
-  - Identifies popular genres and directors.
-  - Analyzes user reviews to extract common themes and sentiments.
-- **Output**: Insights and visualizations that guide further analysis and decision-making.
+2. **Core Visualizations Developed**  
+   The main visual components have been built in React (`/frontend/src/components`). Charts, maps, and data panels are actively being integrated into the UI.
 
-### 6. `.gitignore`
-- **Description**: Specifies files and directories to be ignored by Git.
-- **Purpose**: Prevents unnecessary files (e.g., temporary files, virtual environments) from being tracked by version control.
+3. **Cloud Deployment**  
+   The project has been deployed to a cloud platform using **Vercel**, ensuring easy access and performance scalability.
+
+4. **Ready-to-Use React Components**  
+   All interactive components (sliders, modals, radar charts, maps) are prepared and only require final integration on the main page. Now we are working on it, and some visualizations can look inappropriate, but by the time the presentation, we will bring them to a good look, as well as add additional visualizations.
+
+5. **Modern and Engaging UI Design**  
+   The interface features a clean, responsive layout with animated and dynamic visual elements for a rich user experience.
 
 ---
 
-## Installation
-To set up the project locally, follow these steps:
+## Installation & Usage
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Data-Wrangling-and-Visualisation/Movie-Data-Visualization.git
-   cd Movie-Data-Visualization
+### 1. Clone the Repository
 
-2. **Set up a virtual environment** (optional but recommended):
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   
-   #If you don't have a requirements.txt file [we haven't it yet], install the required packages manually:
-   pip install pandas numpy matplotlib seaborn plotly missingno nltk selenium requests currency-converter
+```bash
+git clone https://github.com/Data-Wrangling-and-Visualisation/Movie-Data-Visualization.git
+cd Movie-Data-Visualization
+```
 
-## How to Use
-1. **Scrape Data**: Run `parsing.ipynb` to collect data from Kinopoisk and generate `movies_final.json`.
-2. **Clean Data**: Execute `main.py` to clean the raw data and produce `cleaned_data.json`.
-3. **Perform EDA**: Open `exploratory_analysis.ipynb` to explore the dataset, generate insights, and create visualizations.
+### 2. Backend (Flask + Docker)
+
+You can run the backend using Docker:
+
+```bash
+cd api
+docker-compose up --build
+```
+
+The Flask server will start on `http://localhost:5000/`.
+
+### 3. Frontend (React + Vite)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The development server will start on `http://localhost:5173/`.
+
+
+## 🔍 How to use repository files
+
+1. **Scrape Data**  
+   Run `parsing.ipynb` to extract data from Kinopoisk and generate `movies_final.json`.
+
+2. **Clean Data**  
+   Run your preprocessing script to convert and clean the data into `cleaned_data.json`.
+
+3. **Run Backend**  
+   Start the Flask server to serve data through RESTful endpoints.
+
+4. **Launch Frontend**  
+   Launch the React app and interact with the visualizations.
+
 
 ## Dependencies
-- Python 3.x
-- Libraries: `pandas`, `numpy`, `matplotlib`, `seaborn`, `plotly`, `missingno`, `nltk`, `selenium`, `json`, `requests`, `currency_converter`
+
+### Backend (Python)
+- Flask
+- pandas, numpy
+- selenium, requests
+- currency_converter
+
+### Frontend (Node)
+- React, Vite
+- chart.js, d3, plotly
+- other visualization libraries
+
+---
 
 ## License
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+This project is licensed under the **MIT License**. See the `LICENSE` file for details.
