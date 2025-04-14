@@ -1,0 +1,11 @@
+{
+    "build": {
+      "builder": "NIXPACKS",
+      "buildCommand": "pip install -r requirements.txt",
+      "startCommand": "python app.py"
+    },
+    "deploy": {
+      "rootDirectory": "api"
+    }
+  }
+  
