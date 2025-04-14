@@ -3,7 +3,8 @@
 
 ## Project Overview
 
-This project presents an interactive data visualization of the **Top 250 movies** according to the Kinopoisk platform. The goal is to provide a clear, intuitive representation of film data by country, genre, budget, ratings, and more. Users can explore **global trends** in cinema, popular genres by region, and **audience preferences** through engaging visual tools.
+This project presents an interactive data visualization of the **Top 250 movies** according to the Kinopoisk platform. The goal is to provide a clear, intuitive representation of film data by country, genre, budget, ratings, and more. Users can explore **global trends** in cinema, popular genres by region, and **audience preferences** through engaging visual tools. 
+
 Moreover, visualizations reveal significant patterns in the film industry that are related to the success of a movie. Therefore, the information in the project can be a **valuable tool** for film analysts to understand certain trends in movie statistics.
 
 **Live Project**: Available at [Vercel link – to be added].
@@ -107,7 +108,7 @@ npm run dev
 The development server will start on `http://localhost:5173/`.
 
 
-## 🔍 How to use repository files
+## How to use repository files
 
 1. **Scrape Data**  
    Run `parsing.ipynb` to extract data from Kinopoisk and generate `movies_final.json`.
