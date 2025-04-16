@@ -88,24 +88,38 @@ class StatsByYear(Resource):
                 "genres": {},
                 "average_rating": sum(float(m['details']['Рейтинг']) for m in filtered_movies) / len(filtered_movies)
             }
-            
-            for movie in filtered_movies:
-                countries = [c.strip() for c in movie['details']['Страна'].split(",")]
-                for country in countries:
-                    if country:
-                        stats['countries'][country] = stats['countries'].get(country, 0) + 1
-            
+
+            country_genre_count = {}
 
             for movie in filtered_movies:
+                countries = [c.strip() for c in movie['details']['Страна'].split(",")]
                 genres = [g.strip() for g in movie['details']['Жанр'].split(",")]
+
+                for country in countries:
+                    if not country:
+                        continue
+
+                    stats['countries'].setdefault(country, {"count": 0, "top_genre": None})
+                    stats['countries'][country]["count"] += 1
+
+                    country_genre_count.setdefault(country, {})
+                    for genre in genres:
+                        if genre:
+                            country_genre_count[country][genre] = country_genre_count[country].get(genre, 0) + 1
+
                 for genre in genres:
                     if genre:
                         stats['genres'][genre] = stats['genres'].get(genre, 0) + 1
-            
+
+            for country, genre_counts in country_genre_count.items():
+                top_genre = max(genre_counts.items(), key=lambda x: x[1])[0]
+                stats['countries'][country]["top_genre"] = top_genre
+
             return jsonify(stats)
-            
+
         except Exception as e:
             return {"error": f"Server error: {str(e)}"}, 500
+
 
 @app.route('/api/charts/years')
 def years_data():
@@ -126,12 +140,12 @@ def boxoffice_data():
     if box_offices:
         min_val = min(box_offices)
         max_val = max(box_offices)
-        step = (max_val - min_val) / 10
-        bins = [min_val + i*step for i in range(11)]
+        step = (max_val - min_val) / 30
+        bins = [min_val + i*step for i in range(31)]
         
-        distribution = {f"{bins[i]:.0f}-{bins[i+1]:.0f}": 0 for i in range(10)}
+        distribution = {f"{bins[i]:.0f}-{bins[i+1]:.0f}": 0 for i in range(30)}
         for amount in box_offices:
-            for i in range(10):
+            for i in range(30):
                 if bins[i] <= amount < bins[i+1]:
                     distribution[f"{bins[i]:.0f}-{bins[i+1]:.0f}"] += 1
                     break
@@ -150,11 +164,11 @@ def ratings_data():
     
     if ratings:
         rating_dist = {}
-        for r in range(0, 101, 5):
-            lower = r / 10
-            upper = (r + 5) / 10
-            key = f"{lower:.1f}-{upper:.1f}"
-            rating_dist[key] = sum(lower <= rating < upper for rating in ratings)
+        for r in range(70, 101):
+            raiting = r / 10
+            key = f"{raiting:.1f}"
+            rating_dist[key] = sum(r == raiting for r in ratings)
+        rating_dist.pop('10.0')    
         return jsonify(rating_dist)
     return jsonify({})
 
