@@ -60,7 +60,7 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.23);
     z-index: 998;
     pointer-events: auto;
   }
