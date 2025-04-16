@@ -5,21 +5,43 @@ import world from '../../public/data/world-110m.json';
 import { countryMappings } from '../utils/countryMappings';
 import './SliderMap.css';
 
-const MAX_FILMS_FOR_SCALE = 50;
 const MIN_YEAR = 1939;
-const MAX_YEAR = 2025;
 const INTER_YEAR = 1982;
+const MAX_YEAR = 2025;
 const USSR_END_YEAR = 1991;
 
-const SliderMap = () => {
+const genreColors = {
+  'драма': '#1f77b4',
+  'комедия': '#ff7f0e',
+  'триллер': '#2ca02c',
+  'документальный': '#d62728',
+  'боевик': '#9467bd', 
+  'мелодрама': '#8c564b',
+  'криминал': '#e377c2',
+  'анимация': '#7f7f7f',
+  'фэнтези': '#bcbd22',
+  'приключения': '#17becf',
+  'ужасы': '#d62728',
+  'фантастика': '#9edae5',
+  'история': '#c49c94',
+  'военный': '#aec7e8',
+  'музыка': '#f7b6d2',
+  'семейный': '#c7c7c7',
+  'спорт': '#dbdb8d',
+  'биография': '#ff9896',
+};
+
+const getGenreColor = (genre) => genreColors[genre] || '#ccc';
+
+const GenreMap = () => {
   const svgRef = useRef();
-  const sliderRef = useRef();
   const tooltipRef = useRef();
   const [currentYear, setCurrentYear] = useState(INTER_YEAR);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dataCache, setDataCache] = useState({});
-  const [showGuide, setShowGuide] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+
 
   const translateCountry = (russianName) => {
     if (currentYear <= USSR_END_YEAR && russianName === 'Россия') {
@@ -38,63 +60,19 @@ const SliderMap = () => {
   }, [currentYear]);
 
   useEffect(() => {
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShowGuide(true);
-          localStorage.setItem('sliderGuideShown', 'true');
-          setTimeout(() => setShowGuide(false), 1200);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (sliderRef.current) {
-      observer.observe(sliderRef.current);
+    if (dataCache[currentYear]) {
+      updateMap(dataCache[currentYear], currentYear);
     }
-
-    return () => observer.disconnect();
-  }, []);
-  
-  useEffect(() => {
-    if (showGuide) {
-      const wiggleSlider = async () => {
-        const original = currentYear;
-        const left = INTER_YEAR - 10;
-        const right = INTER_YEAR + 10;
-
-        const stepDuration = 30;
-        const steps = 10;
-
-        const smoothStep = async (start, end) => {
-          const delta = (end - start) / steps;
-          for (let i = 1; i <= steps; i++) {
-            setCurrentYear(Math.round(start + delta * i));
-            await new Promise(res => setTimeout(res, stepDuration));
-          }
-        };
-
-        await smoothStep(original, left);
-        await smoothStep(left, right);
-        await smoothStep(right, original);
-    
-        };
-  
-      wiggleSlider();
-    }
-  }, [showGuide]);
+  }, [selectedGenre]);
 
   const processCountriesData = (rawData, year) => {
     const result = {};
     for (const [country, value] of Object.entries(rawData)) {
       const entry = result[country] || { count: 0, top_genre: 'Драма' };
       entry.count += value.count;
+      entry.top_genre = value.top_genre;
       result[country] = entry;
     }
-
-    console.log(result);
 
     if (year <= USSR_END_YEAR && result['СССР']) {
       result['Россия'] = result['СССР'];
@@ -114,7 +92,7 @@ const SliderMap = () => {
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stats/${year}`);
-      if (!response.ok) throw new Error('Data upload error');
+      if (!response.ok) throw new Error('Ошибка загрузки данных');
 
       const data = await response.json();
       const processedData = processCountriesData(data.countries || {}, year);
@@ -145,14 +123,16 @@ const SliderMap = () => {
           ? 'СССР'
           : russianName;
 
-        const value = countriesData[displayName]?.count;
-        return value !== undefined
-          ? getColorScale()(Math.min(value, MAX_FILMS_FOR_SCALE))
-          : '#eee';
+        const genre = countriesData[displayName]?.top_genre;
+
+        if (!genre) return '#eee';
+        if (selectedGenre && genre !== selectedGenre) return '#ddd';
+
+        return getGenreColor(genre);
       });
 
     svg.selectAll('path.country')
-      .on('mouseover', function(event, d) {
+      .on('mouseover', function (event, d) {
         const countryEng = d.properties.name;
         let russianName = Object.keys(countryMappings).find(
           key => countryMappings[key] === countryEng
@@ -182,14 +162,14 @@ const SliderMap = () => {
             .html(`
               <div class="tooltip-content">
                 <h4>${translateCountry(russianName)}</h4>
-                <p>Films: ${countryData.count ?? 'N/A'}</p>
+                <p>Genre: ${countryData.top_genre ?? 'N/A'}</p>
               </div>
             `)
             .style('left', '20px')
             .style('bottom', '20px');
         }
       })
-      .on('mouseout', function() {
+      .on('mouseout', function () {
         d3.select(this)
           .transition()
           .duration(200)
@@ -251,71 +231,62 @@ const SliderMap = () => {
       .attr('d', path)
       .attr('fill', '#eee')
       .attr('stroke', '#fff')
-      .attr('stroke-width', 0.5)
-      .on('mouseout', function () {
-        d3.select(this)
-          .attr('stroke', '#fff')
-          .attr('stroke-width', 0.5);
-        d3.select(tooltipRef.current).style('opacity', 0);
-      });
+      .attr('stroke-width', 0.5);
 
-    const legend = mapGroup.append('g')
+      const legendGroup = svg.append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${width - 40}, ${height - 250})`);
-
-    const legendScale = d3.scaleLinear()
-      .domain([0, MAX_FILMS_FOR_SCALE])
-      .range([0, 100]);
-
-    legend.append('g')
-      .call(d3.axisRight(legendScale).ticks(5).tickFormat(d3.format('d')));
-
-    legend.selectAll('rect')
-      .data(d3.range(0, MAX_FILMS_FOR_SCALE, MAX_FILMS_FOR_SCALE / 10))
-      .enter()
-      .append('rect')
-      .attr('x', -20)
-      .attr('y', d => 100 - legendScale(d))
-      .attr('width', 20)
-      .attr('height', d => legendScale(d) / 10)
-      .attr('fill', d => getColorScale()(d));
-  };
-
-  const getColorScale = () => {
-    return d3.scaleSequential(d3.interpolateBlues)
-      .domain([0, MAX_FILMS_FOR_SCALE]);
+      .attr('transform', `translate(20, 60)`);
+    
+    let i = 0;
+    for (const [genre, color] of Object.entries(genreColors)) {
+      legendGroup.append('rect')
+        .attr('x', 0)
+        .attr('y', i * 22)
+        .attr('width', 18)
+        .attr('height', 18)
+        .attr('fill', color)
+        .style('cursor', 'pointer')
+        .on('click', () => {
+          setSelectedGenre(prev => prev === genre ? null : genre);
+        });
+    
+      legendGroup.append('text')
+        .attr('x', 25)
+        .attr('y', i * 22 + 14)
+        .text(genre)
+        .style('font-size', '12px')
+        .style('cursor', 'pointer')
+        .on('click', () => {
+          setSelectedGenre(prev => prev === genre ? null : genre);
+        });
+    
+      i++;
+    }
   };
 
   return (
-      <div className="map-container">
-        {error && <div className="error-message">{error}</div>}
+    <div className="map-container">
+      {error && <div className="error-message">{error}</div>}
 
-        {showGuide && <div className="overlay" onClick={() => setShowGuide(false)} />}
-  
-        <div className="slider-container" ref={sliderRef}>
-          {showGuide && (
-            <div className="slider-guide" onClick={() => setShowGuide(false)}>
-              Move the slider left or right to change the year
-            </div>
-          )}
-
-          <div className="year-display">
-            {'Films before ' + currentYear}
-          </div>
-          <input
-            type="range"
-            min={MIN_YEAR}
-            max={MAX_YEAR}
-            value={currentYear}
-            onChange={(e) => setCurrentYear(parseInt(e.target.value))}
-            className="year-slider"
-          />
+      <div className="slider-container">
+        <div className="year-display">
+          {'Top genre before ' + currentYear}
         </div>
-  
-        <svg ref={svgRef} className="map-svg"></svg>
-        <div ref={tooltipRef} className="map-tooltip"></div>
+        <input
+          type="range"
+          min={MIN_YEAR}
+          max={MAX_YEAR}
+          value={currentYear}
+          onChange={(e) => setCurrentYear(parseInt(e.target.value))}
+          className="year-slider"
+        />
       </div>
-  );  
+
+      <svg ref={svgRef} className="map-svg"></svg>
+
+      <div ref={tooltipRef} className="map-tooltip"></div>
+    </div>
+  );
 };
 
-export default SliderMap;
+export default GenreMap;

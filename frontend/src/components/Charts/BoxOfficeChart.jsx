@@ -6,92 +6,72 @@ const BoxOfficeChart = ({ data }) => {
     (svg) => {
       if (!data) return;
 
-      const margin = {top: 40, right: 30, bottom: 70, left: 80};
+      const margin = {top: 30, right: 30, bottom: 70, left: 60};
       const width = 500 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
 
-      svg.selectAll("*").remove();
+      svg.selectAll('*').remove();
 
-      const chart = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+      const chart = svg
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
 
-      
-      const minValue = 1e6;
-      const maxValue = d3.max(Object.keys(data).flatMap(range => {
-        const [min, max] = range.split('-').map(Number);
-        return [min, max];
-      }));
-      
-      const logScale = d3.scaleLog()
-        .domain([minValue, maxValue])
-        .range([0, 1]);
-      
-      const bins = [];
-      let current = minValue;
-      while (current < maxValue) {
-        const next = current * 3;
-        bins.push([current, next]);
-        current = next;
-      }
+      const formattedData = Object.entries(data)
+        .map(([range, value]) => {
+          const [min, max] = range.split('-').map(Number);
+          return { label: `$${(min / 1e6).toFixed(0)}M–${(max / 1e6).toFixed(0)}M`, min, value };
+        })
+        .sort((a, b) => a.min - b.min);
 
-      const binData = bins.map(([min, max]) => {
-        const count = Object.entries(data).reduce((sum, [range, value]) => {
-          const [rangeMin, rangeMax] = range.split('-').map(Number);
-          if (rangeMin >= min && rangeMax <= max) return sum + value;
-          return sum;
-        }, 0);
-        return [`${min/1e6}-${max/1e6}M`, count];
-      });
-
-      // X axis
-      const x = d3.scaleBand()
-        .domain(binData.map(d => d[0]))
+      const x = d3
+        .scaleBand()
+        .domain(formattedData.map(d => d.label))
         .range([0, width])
         .padding(0.2);
-      
-      chart.append("g")
-        .attr("transform", `translate(0,${height})`)
+
+      const y = d3
+        .scaleLinear()
+        .domain([0, d3.max(formattedData.map(d => d.value))])
+        .range([height, 0]);
+
+      // X axis
+      chart.append('g')
+        .attr('transform', `translate(0,${height})`)
         .call(d3.axisBottom(x))
-        .selectAll("text")
-          .attr("transform", "rotate(-45)")
-          .style("text-anchor", "end");
+        .selectAll('text')
+        .attr('transform', 'rotate(-45)')
+        .style('text-anchor', 'end')
+        .style('font-size', '10px');
 
       // Y axis
-      const y = d3.scaleLinear()
-        .domain([0, d3.max(binData.map(d => d[1]))])
-        .range([height, 0]);
-      
-      chart.append("g")
-        .call(d3.axisLeft(y));
+      chart.append('g').call(d3.axisLeft(y));
 
-      // Line with drawing animation
-      const line = d3.line()
-        .x(d => x(d[0]) + x.bandwidth() / 2)
-        .y(d => y(d[1]));
-      
-      chart.append("path")
-        .datum(binData)
-        .attr("class", "chart-line")
-        .attr("d", line)
-        .attr("stroke-dasharray", function() { return this.getTotalLength(); })
-        .attr("stroke-dashoffset", function() { return this.getTotalLength(); })
-        .attr("stroke-width", 3)
-        .attr("fill", "none")
+      // Bars
+      chart.selectAll('rect')
+        .data(formattedData)
+        .enter()
+        .append('rect')
+        .attr('x', d => x(d.label))
+        .attr('y', height)
+        .attr("class", "chart-bar")
+        .attr('width', x.bandwidth())
+        .attr("height", 0)
+        .attr('opacity', 0.8)
+        .attr("rx", 4)
+        .attr("ry", 4)
         .transition()
-        .duration(1500)
-        .attr("stroke-dashoffset", 0);
+        .duration(800)
+        .delay((d, i) => i * 50)
+        .attr('y', d => y(d.value))
+        .attr('height', d => height - y(d.value));
     },
     [data]
   );
 
   return (
     <div className="chart-container box-office-chart">
-      <h3 className="chart-title">Box Office Revenue (Log scale)</h3>
-      <svg 
-        ref={ref}
-        className="chart-svg"
-        viewBox="0 0 500 400"
-      />
+      <h3 className="chart-title">Box Office Revenue Distribution</h3>
+      <svg ref={ref} className="chart-svg" viewBox="0 0 500 400" />
     </div>
   );
 };

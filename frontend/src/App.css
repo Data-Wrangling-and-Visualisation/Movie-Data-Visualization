@@ -38,7 +38,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;
+  z-index: 998;
   padding: 16px 30px;
   border-radius: 24px;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -141,7 +141,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   text-align: left;
-  padding: 0 7%;
+  padding: 7% 0% 0% 7%;
   position: relative;
 }
 
@@ -315,7 +315,7 @@ body {
   width: 100vw;
   min-height: 200vh;
   background-color: var(--grey);
-  padding: 7% 2% 0% 7%;
+  padding: 7% 3% 0% 7%;
   position: relative;
 }
 
@@ -334,15 +334,34 @@ body {
   min-height: 50vh;
 }
 
+.years-background-image {
+  position: absolute;
+  top: 0px;
+  left: -30%;
+  width: 140%;
+  height: 100%;
+  background-image: url('../public/photos/people.jpg'); /* путь от public */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right center;
+  opacity: 0.08;
+  z-index: 0;
+  pointer-events: none;
+
+  mask-image: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+  -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+}
+
 .years-text {
   flex: 1;
   min-width: 50%;
   max-width: 50%;
   padding-right: 40px;
+  z-index: 1;
 }
 
 .years-description {
-  font-weight: 300;
+  font-weight: 100;
   font-size: 1.2rem;
   line-height: 1.8;
   color: #444;
@@ -353,7 +372,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin-right: 10px;
+  margin-right: 0px;
+  z-index: 1;
 }
 
 .stats-grid {
@@ -443,7 +463,6 @@ body {
   }
 }
 
-/* Общие стили для всех графиков */
 .chart-container {
   background: white;
   border-radius: 12px;
@@ -470,7 +489,6 @@ body {
   display: block;
 }
 
-/* Оси графиков */
 .chart-svg .domain,
 .chart-svg .tick line {
   stroke: #e0e0e0;
@@ -483,7 +501,6 @@ body {
   font-size: 0.7rem;
 }
 
-/* Стили для столбцов (YearChart) */
 .chart-bar {
   fill: #0066cc;
   opacity: 0.8;
@@ -494,21 +511,18 @@ body {
   opacity: 1;
 }
 
-/* Стили для линии (BoxOfficeChart) */
 .chart-line {
   stroke: #0066cc;
   stroke-width: 3;
 }
 
-/* Стили для области (RatingChart) */
 .chart-area {
   fill: #0066cc;
   opacity: 0.5;
-  stroke: #0066cc;
+  stroke: #b82e2e;
   stroke-width: 2;
 }
 
-/* Стили для круговой диаграммы (GenreChart) */
 .chart-arc {
   transition: transform 0.2s ease;
 }
@@ -524,7 +538,6 @@ body {
   fill: #333;
 }
 
-/* Сетка графиков */
 .visualizations-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -572,7 +585,6 @@ body {
   transform: translateY(-90px);
 }
 
-/* Задержки для анимации графиков */
 .visualizations-grid.visible .chart-container:nth-child(1) {
   transition-delay: 3.5s;
 }
@@ -591,47 +603,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 10%;
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.5rem;
-}
-
-.nav {
-  display: flex;
-  gap: 30px;
-}
-
-.nav-btn {
-  background: none;
-  border: none;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 5px 0;
-  position: relative;
-}
-
-.nav-btn.active {
-  font-weight: 700;
-}
-
-.nav-btn.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: var(--black);
+  padding: 0% 0% 7% 0%;
 }
 
 .geography {
-  padding: 0 10%;
-  margin: 50px 0;
+  margin-left: 7%;
+  margin-right: 8%;
 }
 
 .section {
@@ -640,12 +617,48 @@ body {
 
 .section-title {
   font-weight: 300;
-  font-size: 2rem;
-  margin-bottom: 30px;
+  font-size: 3rem;
+  margin-bottom: 0px;
+  margin-left: 7%;
+  margin-top: 7%;
+}
+
+.geo-description {
+  display: flex;
+  justify-content: space-between; /* Разделяет блоки с пространством между ними */
+  align-items: flex-start; /* Выровнять блоки по началу вертикально */
+  font-weight: 100;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+.left-block {
+  text-align: left; /* Выровнять текст по левому краю */
+  width: 45%; /* Задайте ширину в процентах или пикселях, чтобы контролировать размер */
+}
+
+.right-block {
+  text-align: right; /* Выровнять текст по правому краю */
+  width: 45%; /* Задайте ширину в процентах или пикселях, чтобы контролировать размер */
 }
 
 .text-blue {
   color: var(--blue);
+}
+
+.dual-map-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px; /* расстояние между картами */
+  flex-wrap: wrap; /* на всякий, если узкий экран */
+}
+
+.map-block {
+  flex: 1 1 45%;
+  min-width: 400px;
+  max-width: 800px;
 }
 
 .footer {

@@ -6,7 +6,7 @@ const RatingChart = ({ data, onExpand }) => {
     (svg) => {
       if (!data || Object.keys(data).length === 0) return;
 
-      const margin = {top: 30, right: 30, bottom: 100, left: 60};
+      const margin = {top: 30, right: 30, bottom: 70, left: 60};
       const width = 500 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
 
