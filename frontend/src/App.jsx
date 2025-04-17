@@ -36,7 +36,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/movies')
+    fetch(`${import.meta.env.VITE_API_URL}/api/movies`)
       .then(res => res.json())
       .then(data => {
         const numericData = extractNumericData(data);
