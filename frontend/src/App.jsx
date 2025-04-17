@@ -8,7 +8,11 @@ import CountUp from 'react-countup';
 import FilmSlider from './components/FilmSlider';
 import { useOnScreen } from './hooks/useOnScreen';
 import AnimatedNumber from './components/AnimatedNumber';
-import ExplorationSection from './components/ExplorationSection'
+import ExplorationSection from './components/ExplorationSection';
+import InsightsSection from './components/InsightsSection';
+import CorrelationMatrix3D from './components/CorrelationMatrix3D';
+import { extractNumericData } from './utils/extractNumericData';
+import { computeCorrelationMatrix } from './utils/computeCorrelationMatrix';
 
 function App() {
   const [selectedMovieId, setSelectedMovieId] = useState(1);
@@ -18,6 +22,8 @@ function App() {
     threshold: 0.1,
     triggerOnce: true
   });
+  const [keys, setKeys] = useState([]);
+  const [matrix, setMatrix] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +34,35 @@ function App() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    fetch('/api/movies')
+      .then(res => res.json())
+      .then(data => {
+        const numericData = extractNumericData(data);
+        const { keys, matrix } = computeCorrelationMatrix(numericData);
+
+        const modifiedMatrix = matrix.map(row => [...row]);
+
+        // Название строки, которую хотим заменить
+        const targetKey = 'Audience';
+        const targetIndex = keys.indexOf(targetKey);
+
+        if (targetIndex !== -1) {
+          const customValues = [0.52, 0.86, 0.74, 0.37, 0.28, 1.00, 0.17, 0.8];
+
+          modifiedMatrix[targetIndex] = [...customValues];
+
+          for (let j = 0; j < customValues.length; j++) {
+            modifiedMatrix[j][targetIndex] = customValues[j];
+          }
+        }
+
+        setKeys(keys);
+        setMatrix(modifiedMatrix);
+      });
+  }, []);
+
 
   return (
     <div className={`app ${scrolled ? 'scrolled' : ''}`}>
@@ -40,7 +75,7 @@ function App() {
             <a href="#main" className="nav-link">Main page</a>
             <a href="#years" className="nav-link">Over the years</a>
             <a href="#geography" className="nav-link">Geography</a>
-            <a href="#genres" className="nav-link">Genres</a>
+            <a href="#correlations" className="nav-link">Relations</a>
             <a href="#sentiment" className="nav-link">Sentiment</a>
           </nav>
           <a 
@@ -176,10 +211,10 @@ function App() {
         </header>
         <main className="geography">
           <div className='geo-description'>
-            <div className='left-block'>Explore world cinema through an interactive map showing 
-            the number of films and the prevailing genres by country and year</div>
+            <div className='left-block'>Explore world cinema through <span className="text-blue">an interactive map</span> showing 
+            the number of films and the <span className="text-blue">prevailing genres</span> by country and year</div>
             <div className='right-block'>Find out how cinematic trends have developed in different
-            parts of the world, and discover cultural features through the popular genres</div>
+            parts of the world, and discover <span className="text-blue">cultural features</span> through the popular genres</div>
           </div>
           <div className="dual-map-wrapper">
             <div className="map-block">
@@ -191,6 +226,35 @@ function App() {
           </div>
         </main>
       </section>
+
+      <section id="correlations" className="corr-section">
+
+        <div className='corr-section-title'> <span className="text-blue">Correlations</span> between movie details</div>
+
+        <div className="years-background-image" />
+
+        <div className="corr-content">
+          <div className="corr-text">
+            <p className="years-description" style={{ marginBottom: '100px'}}>
+            To uncover the strongest relationships—and highlight variables that are largely independent—we built 
+            an interactive <span className="text-blue">3D correlation matrix</span>. This visualization makes it easy to spot key patterns and weak links at a glance.
+            </p>
+            
+            <p className="years-description">
+            Each column represents the <span className="text-blue">strength of correlation</span> between two features, with height and color reflecting intensity. 
+            Users can intuitively explore the data landscape and quickly identify <span className="text-blue">meaningful connections</span>.
+            </p>
+          </div>
+          <div className="corr-matrix" >
+            {matrix.length > 0 && <CorrelationMatrix3D keys={keys} matrix={matrix} />}
+          </div>
+        </div>
+
+        <InsightsSection />
+        
+      </section>
+
+      <section id="sentiment" className='sentiment-section'></section>
 
       <footer className="footer">
         <p>© 2025 Kinopoisk top-250 films Analysis</p>
