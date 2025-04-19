@@ -46,8 +46,6 @@ function App() {
       .then(res => res.json())
       .then(data => {
 
-        setMovies(data);
-
         const numericData = extractNumericData(data);
         const { keys, matrix } = computeCorrelationMatrix(numericData);
 
