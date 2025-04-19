@@ -26,7 +26,8 @@ function App() {
   });
   const [keys, setKeys] = useState([]);
   const [matrix, setMatrix] = useState([]);
-  const { movies, loading, error } = useMovies();
+  const {movies, loading, error} = useMovies();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,15 +40,19 @@ function App() {
   }, []);
 
   useEffect(() => {
+
+    console.log('something')
     fetch(`${import.meta.env.VITE_API_URL}/api/movies`)
       .then(res => res.json())
       .then(data => {
+
+        setMovies(data);
+
         const numericData = extractNumericData(data);
         const { keys, matrix } = computeCorrelationMatrix(numericData);
 
         const modifiedMatrix = matrix.map(row => [...row]);
 
-        // Название строки, которую хотим заменить
         const targetKey = 'Audience';
         const targetIndex = keys.indexOf(targetKey);
 
@@ -259,8 +264,7 @@ function App() {
 
       <section id="sentiment" className='sentiment-section'>
         <div className='sentiment-section-title'> <span className="text-blue">Sentiment</span> analysis of reviews</div>
-
-        <SentimentTrendsChart movies={movies} />
+        {movies && <SentimentTrendsChart movies={movies} />}
       </section>
 
       <footer className="footer">
