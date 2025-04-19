@@ -804,19 +804,23 @@ body {
 .conclusion {
   margin-top: 0.6rem;
   font-weight: 500;
-  color: #004488;
+  color: #0066cc;
   font-style: italic;
 }
 
+
 .sentiment-section {
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  text-align: left;
   padding: 7% 0% 0% 7%;
   position: relative;
+}
+
+.sentiment-section-title {
+  font-weight: 300;
+  font-size: 3rem;
+  margin-top: 0%;
+  margin-bottom: 80px;
+  color: var(--black);
 }
 
 

@@ -13,6 +13,8 @@ import InsightsSection from './components/InsightsSection';
 import CorrelationMatrix3D from './components/CorrelationMatrix3D';
 import { extractNumericData } from './utils/extractNumericData';
 import { computeCorrelationMatrix } from './utils/computeCorrelationMatrix';
+import useMovies from './hooks/useFilmData';
+import SentimentTrendsChart from './components/Charts/SentimentTrendsChart';
 
 function App() {
   const [selectedMovieId, setSelectedMovieId] = useState(1);
@@ -24,6 +26,7 @@ function App() {
   });
   const [keys, setKeys] = useState([]);
   const [matrix, setMatrix] = useState([]);
+  const { movies, loading, error } = useMovies();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -254,7 +257,11 @@ function App() {
         
       </section>
 
-      <section id="sentiment" className='sentiment-section'></section>
+      <section id="sentiment" className='sentiment-section'>
+        <div className='sentiment-section-title'> <span className="text-blue">Sentiment</span> analysis of reviews</div>
+
+        <SentimentTrendsChart movies={movies} />
+      </section>
 
       <footer className="footer">
         <p>© 2025 Kinopoisk top-250 films Analysis</p>
