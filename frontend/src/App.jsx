@@ -15,6 +15,9 @@ import { extractNumericData } from './utils/extractNumericData';
 import { computeCorrelationMatrix } from './utils/computeCorrelationMatrix';
 import useMovies from './hooks/useFilmData';
 import SentimentTrendsChart from './components/Charts/SentimentTrendsChart';
+import GenreSentimentLineChart from './components/Charts/GenreSentimentLineChart';
+import StdDevChart from './components/Charts/StdDevChart';
+import StripPlotByGenre from './components/Charts/StripPlotByGenre'; 
 
 function App() {
   const [selectedMovieId, setSelectedMovieId] = useState(1);
@@ -215,7 +218,9 @@ function App() {
             <span className="text-blue">Cinematography</span> on a map
           </h2>
         </header>
+
         <main className="geography">
+
           <div className='geo-description'>
             <div className='left-block'>Explore world cinema through <span className="text-blue">an interactive map</span> showing 
             the number of films and the <span className="text-blue">prevailing genres</span> by country and year</div>
@@ -262,7 +267,39 @@ function App() {
 
       <section id="sentiment" className='sentiment-section'>
         <div className='sentiment-section-title'> <span className="text-blue">Sentiment</span> analysis of reviews</div>
+
+        
+
+        <div className='geo-description'>
+          <div className='left-block'>To understand how the <span className="text-blue">positive, neutral and negative tonality </span>
+            reviews are distributed for high-rating films, we will use <span className="text-blue">multi-series line char</span>
+          </div>
+          <div className='right-block'>Films are sorted by rating and general estimation,
+            discover <span className="text-blue">the polarity of reviews</span> for each film</div>
+        </div>
         {movies && <SentimentTrendsChart movies={movies} />}
+        <div className='geo-description'>
+          <div className='left-block'>Discover how audiences perceive films of <span className="text-blue">different genres</span>, 
+            from inspirational dramas to suspenseful thrillers
+          </div>
+          <div className='right-block'>Graph shows the emotions evoked by genres: 
+            where <span className="text-blue">delight prevails</span>, where <span className="text-blue">indifference prevails</span>, 
+            and where <span className="text-blue"> disappointment prevails</span>
+          </div>  
+        </div>
+        {movies && <GenreSentimentLineChart movies={movies} />}
+        <p className="years-description" style={{ marginBottom: '10%' }}>
+        In addition to information about the tone of the reviews, we decided to evaluate its <span className="text-blue">approximate numeric value</span> for each film 
+        with a value from -1 to 1, where -1 is the strongest negative emotion, and 1 is the strongest positive emotion, 
+         0 is an absolutely neutral review. The results of calculating the degree of tonality are shown in the <span className="text-blue">following diagram</span>:
+        </p>
+        {movies && <StripPlotByGenre movies={movies} />}
+        <div className='geo-description'>
+          <div className='left-block'>For better understanding the tonality data for reviews, you can follow the 
+          <span className="text-blue"> standart deviation</span> chart that shows the <span className="text-blue">polarity</span> of such reviews group by genre:
+          </div>
+        </div>
+        {movies && <StdDevChart movies={movies} />}
       </section>
 
       <footer className="footer">

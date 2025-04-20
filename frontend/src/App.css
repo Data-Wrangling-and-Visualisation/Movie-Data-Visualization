@@ -810,8 +810,8 @@ body {
 
 
 .sentiment-section {
-  height: 100vh;
-  padding: 7% 0% 0% 7%;
+  height: 500vh;
+  padding: 7% 8% 0% 7%;
   position: relative;
 }
 
@@ -821,6 +821,13 @@ body {
   margin-top: 0%;
   margin-bottom: 80px;
   color: var(--black);
+}
+
+.sentiment-vis-text {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  font-size: 1.4rem;
+  fill: #333;
 }
 
 

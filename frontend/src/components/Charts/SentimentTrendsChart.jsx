@@ -33,6 +33,7 @@ export default function SentimentTrendsChart({ movies }) {
       const rating = +details["Рейтинг"];
 
       return {
+        title: movie.title,
         rating,
         positiveRatio: pos / total || 0,
         neutralRatio: neu / total || 0,
@@ -42,7 +43,7 @@ export default function SentimentTrendsChart({ movies }) {
     .filter(entry => !isNaN(entry.rating))
     .sort((a, b) => a.rating - b.rating);
 
-  const labels = sorted.map((_, index) => index + 1);
+  const labels = sorted.map(d => d.title);
 
   const data = {
     labels,
@@ -87,12 +88,22 @@ export default function SentimentTrendsChart({ movies }) {
         position: "top"
       },
       tooltip: {
+        mode: 'index',
+        intersect: false,
         callbacks: {
+          title: context => {
+            const title = context[0].label;
+            return `${title}`;
+          },
           label: context => {
             return `${context.dataset.label}: ${(context.parsed.y * 100).toFixed(1)}%`;
           }
         }
       }
+    },
+    interaction: {
+      mode: 'index',
+      intersect: false
     },
     scales: {
       y: {
@@ -111,13 +122,16 @@ export default function SentimentTrendsChart({ movies }) {
       }
     }
   };
+  
 
   return (
     <div style={{ width: "100%", maxWidth: "900px", margin: "0 auto" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "30px" }} className="sentiment-vis-text">
         Sentiment distribution of movies reviews
       </h2>
-      <Line data={data} options={options} />
+      <div style={{marginBottom: "10%" }}>
+        <Line data={data} options={options} />
+      </div>
     </div>
   );
 }
