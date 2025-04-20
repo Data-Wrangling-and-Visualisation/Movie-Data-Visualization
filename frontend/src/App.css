@@ -838,6 +838,16 @@ body {
   font-size: 0.9rem;
 }
 
+.people-section {
+  width: 100vw;
+  min-height: 200vh;
+  background-color: var(--grey);
+  padding: 7% 3% 0% 7%;
+  position: relative;
+}
+
+
+
 @media (max-width: 1200px) {
   .cover-title {
     font-size: 4.5vw;

@@ -201,9 +201,55 @@ def durations_data():
             key = f"{d}-{d+20} min"
             duration_dist[key] = sum(d <= duration < d+20 for duration in durations)
         return jsonify(duration_dist)
-    return jsonify({})          
+    return jsonify({})
+
+class TrustedPeople(Resource):
+    def get(self):
+        actor_stats = {}
+        director_stats = {}
+
+        for m in movies_data:
+            title = m['title']
+            details = m.get('details', {})
+            rating = float(details.get('Рейтинг', 0)) or 0
+
+            directors_raw = details.get('Режиссер', '')
+            directors = [d.strip() for d in directors_raw.split(',') if d.strip()]
+            for director in directors:
+                if director not in director_stats:
+                    director_stats[director] = {'films': [], 'ratings': []}
+                director_stats[director]['films'].append(title)
+                director_stats[director]['ratings'].append(rating)
+
+            actors = details.get('Актеры', [])
+            for actor in actors:
+                if actor not in actor_stats:
+                    actor_stats[actor] = {'films': [], 'ratings': []}
+                actor_stats[actor]['films'].append(title)
+                actor_stats[actor]['ratings'].append(rating)
+
+        def format_person(name, stats, person_type):
+            avg_rating = round(sum(stats['ratings']) / len(stats['ratings']), 2) if stats['ratings'] else 0
+            return {
+                'name': name,
+                'type': person_type,
+                'filmCount': len(stats['films']),
+                'averageRating': avg_rating,
+                'films': stats['films']
+            }
+
+        top_actors = sorted(actor_stats.items(), key=lambda x: len(x[1]['films']), reverse=True)[:10]
+        top_directors = sorted(director_stats.items(), key=lambda x: len(x[1]['films']), reverse=True)[:7]
+
+        result = {
+            'topActors': [format_person(name, stats, 'actor') for name, stats in top_actors],
+            'topDirectors': [format_person(name, stats, 'director') for name, stats in top_directors],
+        }
+
+        return jsonify(result)          
 
 
+api.add_resource(TrustedPeople, '/api/trusted_people')
 api.add_resource(StatsByYear, '/api/stats/<int:end_year>')
 api.add_resource(Movies, '/api/movies')
 api.add_resource(Movie, '/api/movies/<int:movie_id>')

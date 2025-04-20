@@ -302,6 +302,13 @@ function App() {
         {movies && <StdDevChart movies={movies} />}
       </section>
 
+      <section className='people-section'> 
+        <h2 className="section-title">
+          <span className="text-blue">"People</span> of success"
+        </h2>
+      </section>
+
+
       <footer className="footer">
         <p>© 2025 Kinopoisk top-250 films Analysis</p>
       </footer>
