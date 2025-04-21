@@ -17,7 +17,10 @@ import useMovies from './hooks/useFilmData';
 import SentimentTrendsChart from './components/Charts/SentimentTrendsChart';
 import GenreSentimentLineChart from './components/Charts/GenreSentimentLineChart';
 import StdDevChart from './components/Charts/StdDevChart';
-import StripPlotByGenre from './components/Charts/StripPlotByGenre'; 
+import StripPlotByGenre from './components/Charts/StripPlotByGenre';
+import TrustedSection from './components/TrustedSection';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css"; 
 
 function App() {
   const [selectedMovieId, setSelectedMovieId] = useState(1);
@@ -86,6 +89,7 @@ function App() {
             <a href="#geography" className="nav-link">Geography</a>
             <a href="#correlations" className="nav-link">Relations</a>
             <a href="#sentiment" className="nav-link">Sentiment</a>
+            <a href="#people" className="nav-link">Actors/directors</a>
           </nav>
           <a 
             href="https://t.me/mescudiway" 
@@ -162,7 +166,7 @@ function App() {
               <div className="years-stat-item">
                 <AnimatedNumber 
                   value={58.7} 
-                  duration={1.5} 
+                  duration={1.0} 
                   decimals={1} 
                   suffix="B" 
                   startOnView 
@@ -174,7 +178,7 @@ function App() {
               <div className="years-stat-item">
                 <AnimatedNumber 
                   value={58.5} 
-                  duration={1.5}
+                  duration={1.0}
                   decimals={1} 
                   suffix="m" 
                   startOnView 
@@ -186,7 +190,7 @@ function App() {
               <div className="years-stat-item">
                 <AnimatedNumber 
                   value={126} 
-                  duration={1.5} 
+                  duration={1.0} 
                   suffix=" min" 
                   startOnView 
                   isVisible={isYearsVisible}
@@ -197,7 +201,7 @@ function App() {
               <div className="years-stat-item">
                 <AnimatedNumber 
                   value={8.2} 
-                  duration={1.5} 
+                  duration={1.0} 
                   decimals={1} 
                   startOnView 
                   isVisible={isYearsVisible}
@@ -266,10 +270,9 @@ function App() {
       </section>
 
       <section id="sentiment" className='sentiment-section'>
+
         <div className='sentiment-section-title'> <span className="text-blue">Sentiment</span> analysis of reviews</div>
-
         
-
         <div className='geo-description'>
           <div className='left-block'>To understand how the <span className="text-blue">positive, neutral and negative tonality </span>
             reviews are distributed for high-rating films, we will use <span className="text-blue">multi-series line char</span>
@@ -302,10 +305,26 @@ function App() {
         {movies && <StdDevChart movies={movies} />}
       </section>
 
-      <section className='people-section'> 
-        <h2 className="section-title">
+      <section id='people' className='people-section'> 
+        <h2 className="people-title">
           <span className="text-blue">"People</span> of success"
         </h2>
+
+        <div className="years-background-image" />
+
+        <div className="years-text">
+          <p className="years-description" style={{ marginBottom: '30px', width: '200%' }}>
+            There are personalities in the world of cinema who seem to bring with them a <span className='text-blue'>mark of quality</span>. 
+            The film can be different, genres can be any, but if their name flashes in the credits, you already know: 
+            it will be <span className='text-blue'>interesting</span>.
+          </p>
+          <p className="years-description" style={{ width: '200%' }}>
+          This list includes actors and directors who participated the most frequently in the production of films from the top 250. 
+          It can be said that a team consisting of these actors and directors can potentially <span className='text-blue'>count on high ratings </span> 
+           and box office receipts. Actors and directors who <span className='text-blue'>can be trusted</span> with taste, style and sense.
+          </p>
+        </div>
+        <TrustedSection />
       </section>
 
 

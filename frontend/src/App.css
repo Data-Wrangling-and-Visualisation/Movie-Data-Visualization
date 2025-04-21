@@ -830,6 +830,12 @@ body {
   fill: #333;
 }
 
+.people-title {
+  font-weight: 300;
+  font-size: 3rem;
+  margin-bottom: 80px;
+  color: var(--black);
+}
 
 .footer {
   padding: 30px 10%;
@@ -845,6 +851,9 @@ body {
   padding: 7% 3% 0% 7%;
   position: relative;
 }
+
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
 
 
 

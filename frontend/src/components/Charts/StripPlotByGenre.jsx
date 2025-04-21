@@ -18,9 +18,8 @@ ChartJS.register(
 );
 
 export default function StripPlotByGenre({ movies }) {
-  const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('аниме');
 
-  // Собираем все жанры из фильмов, разделяя по запятой и очищая
   const genres = useMemo(() => {
     const allGenres = movies
       .flatMap((m) =>
