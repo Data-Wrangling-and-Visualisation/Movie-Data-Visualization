@@ -14,7 +14,7 @@ const TrustedSection = () => {
 
   return (
     <>
-      <TrustedPeopleSlider people={data.topDirectors} title="Top diectors:" />
+      <TrustedPeopleSlider people={data.topDirectors} title="Top directors:" />
       <TrustedPeopleSlider people={data.topActors} title="Top actors:" />
     </>
   );
